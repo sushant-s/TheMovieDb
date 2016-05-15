@@ -1,9 +1,8 @@
 package com.example.sushant.themoviedb.ApiCalls;
 
-import android.telecom.Call;
-
 import com.example.sushant.themoviedb.PlainJavaObject.MovieList;
 import com.example.sushant.themoviedb.PlainJavaObject.SessionId;
+import com.example.sushant.themoviedb.PlainJavaObject.Token;
 
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -27,15 +26,12 @@ public interface Retro {
     retrofit2.Call<SessionId> getSessionId(
             @Url String url,
             @Query(Constants.api_key) String api_key,
-            @Query(Constants.request_token) String request_token,
-            @Query(Constants.session_id) String session_id);
+            @Query(Constants.request_token) String request_token);
 
     @GET
-    retrofit2.Call<MovieList> getToken(
+    retrofit2.Call<Token> getToken(
             @Url String url,
-            @Query(Constants.api_key) String api_key,
-            @Query(Constants.request_token) String request_token,
-            @Query(Constants.session_id) String session_id);
+            @Query(Constants.api_key) String api_key);
 
 
 
