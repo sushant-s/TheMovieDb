@@ -6,10 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.example.sushant.themoviedb.ApiCalls.TheMovieDbApi;
 import com.example.sushant.themoviedb.PlainJavaObject.MovieInfo;
 import com.example.sushant.themoviedb.R;
+import com.example.sushant.themoviedb.TheMovieDbApp;
 
 import java.util.ArrayList;
 
@@ -19,11 +23,12 @@ import java.util.ArrayList;
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
 
     private static Context sContext;
-    private ArrayList<MovieInfo> movieList = new ArrayList<>();
+    private ArrayList<MovieInfo> movieInfos = new ArrayList<>();
+    private static final String API_KEY = "a759d56bc9f8e7a541ecb01619125f73";
 
-    public MovieAdapter(Context context, ArrayList<MovieInfo> movieList){
+    public MovieAdapter(Context context, ArrayList<MovieInfo> movieInfos){
         sContext = context;
-        this.movieList = movieList;
+        this.movieInfos = movieInfos;
     }
 
     @Override
@@ -37,7 +42,24 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.cardMovieName.setText(movieList.get(getItemPosition(position)).title);
+        holder.movieName.setText(movieInfos.get(getItemPosition(position)).getTitle());
+        holder.movieOverview.setText(movieInfos.get(getItemPosition(position)).getOverview());
+        String famous = Float.toString(movieInfos.get(getItemPosition(position)).getPopularity());
+        holder.moviePopularity.setText(famous);
+
+        String imageurl = "http://image.tmdb.org/t/p/w500" + movieInfos.get(getItemPosition(position)).getPoster_path();
+
+
+        if (movieInfos.get(getItemPosition(position)).getPoster_path() != null) {
+            Glide
+                    .with(TheMovieDbApp.getAppContext())
+                    .load(imageurl)
+                    .placeholder(R.drawable.small_movie_poster)
+                    .crossFade()
+                    .into(holder.moviewPoster);
+        }
+
+        else holder.moviewPoster.setVisibility(View.GONE);
     }
 
     public int getItemPosition(int position){
@@ -46,17 +68,18 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return movieList.size();
+        return movieInfos.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private CardView cardView;
-        private TextView cardMovieName;
+        private TextView movieName, movieOverview, moviePopularity;
+        private ImageView moviewPoster;
         public ViewHolder(View v) {
             super(v);
-            cardView = (CardView)v.findViewById(R.id.movieCardView);
-            cardMovieName = (TextView)v.findViewById(R.id.movie_name);
-
+            movieName = (TextView)v.findViewById(R.id.Title);
+            moviewPoster = (ImageView)v.findViewById(R.id.PosterImage);
+            movieOverview = (TextView)v.findViewById(R.id.Overview);
+            moviePopularity = (TextView)v.findViewById(R.id.popularity);
         }
     }
 

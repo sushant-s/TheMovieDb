@@ -15,12 +15,9 @@ import retrofit2.http.Url;
 public interface Retro {
 
     @GET
-    @Headers("Cache-Control:max-age=3600")
     retrofit2.Call<MovieList> getMovieList(
             @Url String url,
-            @Query(Constants.api_key) String api_key,
-            @Query(Constants.request_token) String request_token,
-            @Query(Constants.session_id) String session_id);
+            @Query(Constants.api_key) String api_key);
 
     @GET
     retrofit2.Call<SessionId> getSessionId(
@@ -33,6 +30,13 @@ public interface Retro {
             @Url String url,
             @Query(Constants.api_key) String api_key);
 
+    @GET
+    retrofit2.Call<Token> getValidate(
+            @Url String url,
+            @Query(Constants.api_key) String api_key,
+            @Query(Constants.request_token) String request_token,
+            @Query(Constants.username) String username,
+            @Query(Constants.password) String password);
 
 
 }

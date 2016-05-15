@@ -8,4 +8,6 @@ public class Constants {
     public static final String api_key = "api_key";
     public static final String request_token = "request_token";
     public static final String session_id = "session_id";
+    public static final String username = "username";
+    public static final String password = "password";
 }

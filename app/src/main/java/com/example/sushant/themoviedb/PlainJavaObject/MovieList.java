@@ -10,12 +10,13 @@ import java.util.List;
  */
 public class MovieList {
 
-    public ArrayList<MovieInfo> getMovieInfo() {
-        return movieInfo;
+
+    public List<MovieInfo> getResults() {
+        return results;
     }
 
-    public void setMovieInfo(ArrayList<MovieInfo> movieInfo) {
-        this.movieInfo = movieInfo;
+    public void setResults(List<MovieInfo> results) {
+        this.results = results;
     }
 
     public int getTotal_pages() {
@@ -27,7 +28,7 @@ public class MovieList {
     }
 
     @Expose
-    public ArrayList<MovieInfo> movieInfo;
+    public List<MovieInfo> results;
 
     @Expose
     public int total_pages;

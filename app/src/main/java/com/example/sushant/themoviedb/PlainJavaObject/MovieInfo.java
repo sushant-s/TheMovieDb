@@ -2,6 +2,8 @@ package com.example.sushant.themoviedb.PlainJavaObject;
 
 import com.google.gson.annotations.Expose;
 
+import java.util.ArrayList;
+
 
 /**
  * Created by sushant on 14/5/16.
@@ -9,29 +11,33 @@ import com.google.gson.annotations.Expose;
 public class MovieInfo {
 
     @Expose
+    public boolean adult;
+
+    @Expose
     public String backdrop_path;
+
+    @Expose
+    public ArrayList<Integer> genre_ids;
 
     @Expose
     public int id;
 
     @Expose
-    public String release_date;
+    public String original_language;
 
     @Expose
-    public String poster_path;
+    public String original_title;
 
     @Expose
-    public int rating;
+    public String overview;
 
-    @Expose
-    public String title;
+    public boolean isAdult() {
+        return adult;
+    }
 
-    @Expose
-    public int vote_average;
-
-    @Expose
-    public int vote_count;
-
+    public void setAdult(boolean adult) {
+        this.adult = adult;
+    }
 
     public String getBackdrop_path() {
         return backdrop_path;
@@ -41,12 +47,44 @@ public class MovieInfo {
         this.backdrop_path = backdrop_path;
     }
 
+    public ArrayList<Integer> getGenre_ids() {
+        return genre_ids;
+    }
+
+    public void setGenre_ids(ArrayList<Integer> genre_ids) {
+        this.genre_ids = genre_ids;
+    }
+
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getOriginal_language() {
+        return original_language;
+    }
+
+    public void setOriginal_language(String original_language) {
+        this.original_language = original_language;
+    }
+
+    public String getOriginal_title() {
+        return original_title;
+    }
+
+    public void setOriginal_title(String original_title) {
+        this.original_title = original_title;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
     }
 
     public String getRelease_date() {
@@ -65,12 +103,12 @@ public class MovieInfo {
         this.poster_path = poster_path;
     }
 
-    public int getRating() {
-        return rating;
+    public float getPopularity() {
+        return popularity;
     }
 
-    public void setRating(int rating) {
-        this.rating = rating;
+    public void setPopularity(float popularity) {
+        this.popularity = popularity;
     }
 
     public String getTitle() {
@@ -81,11 +119,11 @@ public class MovieInfo {
         this.title = title;
     }
 
-    public int getVote_average() {
+    public float getVote_average() {
         return vote_average;
     }
 
-    public void setVote_average(int vote_average) {
+    public void setVote_average(float vote_average) {
         this.vote_average = vote_average;
     }
 
@@ -96,5 +134,23 @@ public class MovieInfo {
     public void setVote_count(int vote_count) {
         this.vote_count = vote_count;
     }
+
+    @Expose
+    public String release_date;
+
+    @Expose
+    public String poster_path;
+
+    @Expose
+    public float popularity;
+
+    @Expose
+    public String title;
+
+    @Expose
+    public float vote_average;
+
+    @Expose
+    public int vote_count;
 
 }

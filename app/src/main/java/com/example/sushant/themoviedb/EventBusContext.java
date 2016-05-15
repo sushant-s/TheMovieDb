@@ -6,7 +6,7 @@ package com.example.sushant.themoviedb;
 public class EventBusContext {
     public int ActionCode;
 
-    public EventBusContext(int actionCode)
+    EventBusContext(int actionCode)
     {
         this.ActionCode=actionCode;
     }

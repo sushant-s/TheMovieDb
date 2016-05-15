@@ -1,28 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:id="@+id/movieCardView"
-    card_view:cardCornerRadius="2dp"
-    card_view:cardBackgroundColor="@color/background_floating_material_light"
-    card_view:cardElevation="2dp"
-    card_view:cardUseCompatPadding="true"
-    android:foreground="?android:attr/selectableItemBackground"
-    android:layout_gravity="center"
-    android:focusable="true"
-    android:gravity="center"
-    android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/aits_card_item_ll"
-        android:paddingBottom="16dp"
-        android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/movie_name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="no_name"/>
-    </LinearLayout>
-</android.support.v7.widget.CardView>
+    android:gravity="top"
+    android:padding="5dp" >
+
+    <ImageView
+        android:id="@+id/PosterImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:maxHeight="93dp"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:contentDescription="poster image" />
+
+    <TextView
+        android:id="@+id/Title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/PosterImage"
+        android:text="The Dark Knight"
+        android:textSize="12sp"
+        android:textColor="@color/background_material_dark"/>
+
+    <TextView
+        android:id="@+id/Overview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/popularity"
+        android:layout_alignLeft="@+id/popularity"
+        android:lines="4"
+        android:gravity="bottom"
+        android:text="Christian Bale, Joseph-Gordon Levitt"
+        android:textSize="10sp"
+        android:textColor="@color/background_material_dark"/>
+
+    <TextView
+        android:id="@+id/popularity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/Title"
+        android:layout_below="@+id/Title"
+        android:text="93%"
+        android:textSize="10sp"
+        android:textColor="@color/background_material_dark"/>
+
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.example.sushant.themoviedb;
 
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,7 @@ import com.example.sushant.themoviedb.PlainJavaObject.Token;
 import com.example.sushant.themoviedb.EventBusContext;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 import de.greenrobot.event.EventBus;
 import retrofit2.Call;
@@ -28,10 +30,10 @@ import retrofit2.Response;
  */
 
 
-public class MainView extends AppCompatActivity {
+public class MainView extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener{
 
     private Toolbar toolbar;
-    private EventBus eventBus;
+    public EventBus eventBus;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -43,12 +45,16 @@ public class MainView extends AppCompatActivity {
 
     private static final String API_KEY = "a759d56bc9f8e7a541ecb01619125f73";
     private static final String BASE_URL = "http://api.themoviedb.org/3/";
+    private static final String USERNAME = "sushant-s";
+    private static final String PASSWORD = "sushant1993";
     public static final int GET_TOKEN = 1;
     public static final int POST_GET_TOKEN = 2;
     public static final int GET_SESSION_ID = 3;
     public static final int POST_GET_SESSION_ID = 4;
     public static final int GET_MOVIE_INFO = 5;
     public static final int POST_GET_MOVIE_INFO = 6;
+    public static final int VALIDATE = 7;
+    public static final int POST_VALIDATE = 8;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +62,7 @@ public class MainView extends AppCompatActivity {
         setContentView(R.layout.layout_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        setTitle("Movies");
+        setTitle("Movie Ratings");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         eventBus = new EventBus();
@@ -67,6 +73,12 @@ public class MainView extends AppCompatActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setHasFixedSize(true);
     }
+
+    @Override
+    public void onRefresh() {
+        new HomeDataLoadThread(GET_MOVIE_INFO).start();
+    }
+
 
     public class HomeDataLoadThread extends Thread {
         int requestType;
@@ -89,6 +101,25 @@ public class MainView extends AppCompatActivity {
                     if (token.getRequest_token() == null) {
                         url = BASE_URL + "authentication/token/new";
                         Call<Token> tokenCall = TheMovieDbApi.movieDbCall.getToken(url, API_KEY);
+                        tokenCall.enqueue(new Callback<Token>() {
+                            @Override
+                            public void onResponse(Call<Token> call, Response<Token> response) {
+                                token = response.body();
+                                eventBus.post(new EventBusContext(POST_VALIDATE));
+                            }
+
+                            @Override
+                            public void onFailure(Call<Token> call, Throwable t) {
+
+                            }
+                        });
+                    }
+
+                }
+                if(requestType == VALIDATE) {
+                    if (token.getRequest_token() != null) {
+                        url = BASE_URL + "authentication/token/validate_with_login";
+                        Call<Token> tokenCall = TheMovieDbApi.movieDbCall.getValidate(url, API_KEY, token.getRequest_token(), USERNAME, PASSWORD);
                         tokenCall.enqueue(new Callback<Token>() {
                             @Override
                             public void onResponse(Call<Token> call, Response<Token> response) {
@@ -126,12 +157,15 @@ public class MainView extends AppCompatActivity {
                 if(requestType == GET_MOVIE_INFO) {
                     if ((sessionId.getSession_id() != null) && (token.getRequest_token() != null)) {
                         url = "";
-                        url = BASE_URL + "account/id/rated/movies";
-                        Call<MovieList> movieListCall = TheMovieDbApi.movieDbCall.getMovieList(url, API_KEY, token.getRequest_token(), sessionId.getSession_id());
+                        url = BASE_URL + "movie/popular";
+                        Call<MovieList> movieListCall = TheMovieDbApi.movieDbCall.getMovieList(url, API_KEY);
                         movieListCall.enqueue(new Callback<MovieList>() {
                             @Override
                             public void onResponse(Call<MovieList> call, Response<MovieList> response) {
                                 movieList=response.body();
+                                    for (int i = 0; i < movieList.results.size(); i++) {
+                                        movieInfos.add(movieList.getResults().get(i));
+                                    }
                                 eventBus.post(new EventBusContext(POST_GET_MOVIE_INFO));
                             }
 
@@ -153,11 +187,14 @@ public class MainView extends AppCompatActivity {
     }
 
     public void onEventMainThread(EventBusContext eventBusContext) {
+        if (eventBusContext.getActionCode() == POST_VALIDATE) {
+            new HomeDataLoadThread(VALIDATE).start();
+        }
         if (eventBusContext.getActionCode() == POST_GET_TOKEN) {
             new HomeDataLoadThread(GET_SESSION_ID).start();
         }
         if (eventBusContext.getActionCode() == POST_GET_SESSION_ID) {
-            new HomeDataLoadThread(GET_MOVIE_INFO);
+            new HomeDataLoadThread(GET_MOVIE_INFO).start();
         }
         if (eventBusContext.getActionCode() == POST_GET_MOVIE_INFO) {
             mAdapter = new MovieAdapter(MainView.this, movieInfos);
@@ -165,6 +202,8 @@ public class MainView extends AppCompatActivity {
             mAdapter.notifyDataSetChanged();
         }
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

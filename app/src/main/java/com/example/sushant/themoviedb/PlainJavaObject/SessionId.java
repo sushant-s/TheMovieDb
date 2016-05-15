@@ -8,9 +8,6 @@ import com.google.gson.annotations.Expose;
  */
 public class SessionId {
 
-    @Expose
-    public String session_id;
-
     public String getSession_id() {
         return session_id;
     }
@@ -18,4 +15,9 @@ public class SessionId {
     public void setSession_id(String session_id) {
         this.session_id = session_id;
     }
+
+    @Expose
+    public String session_id;
+
+
 }
